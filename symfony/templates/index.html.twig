@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lazy Postman</title>
+    <style>
+        textarea, pre, code {
+            min-width: 300px;
+            min-height: 200px;
+        }
+        pre {
+            background-color: #ddd;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $('button').click(function(){
+
+                const json = $('textarea').val();
+                try {
+                    JSON.parse(json);
+                } catch(e) {
+                    alert("You have an error in the JSON. Please check it's valid and try again.");
+                    return;
+                }
+
+                $.ajax(
+                    "/api-broker/get-commission",
+                    {
+                        dataType: "json",
+                        data: json,
+                        method: "POST",
+                        success: function(response) {
+                            $('code').text(JSON.stringify(response, null, "\t"));
+                        }
+                    }
+                );
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Quick alternative for testing to using postman.</h2>
+    <p>Just enter the JSON to send here</p>
+    <textarea>{{ default_json }}</textarea>
+    <p>Click submit</p>
+    <button type="button">Submit</button>
+    <p>And check the output below</p>
+    <pre><code>&nbsp;</code></pre>
+</body>
+</html>
